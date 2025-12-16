@@ -1,0 +1,42 @@
+[
+  {
+    "email": "deneme@appective.net",
+    "marketingConsent": true,
+    "dataProcessingConsent": true,
+    "subscriptionDate": "2025-05-13T07:52:48.000Z",
+    "id": "1747122768000",
+    "createdAt": "2025-05-13T07:52:48.000Z"
+  },
+  {
+    "email": "ozkal@appective.net",
+    "marketingConsent": true,
+    "dataProcessingConsent": true,
+    "subscriptionDate": "2025-05-13T08:03:57.226Z",
+    "id": "1747123437227",
+    "createdAt": "2025-05-13T08:03:57.227Z"
+  },
+  {
+    "email": "aa@aaa.com",
+    "marketingConsent": true,
+    "dataProcessingConsent": true,
+    "subscriptionDate": "2025-05-13T10:50:06.808Z",
+    "id": "1747133406808",
+    "createdAt": "2025-05-13T10:50:06.808Z"
+  },
+  {
+    "email": "bbb@bbb.com",
+    "marketingConsent": true,
+    "dataProcessingConsent": true,
+    "subscriptionDate": "2025-05-13T10:50:38.492Z",
+    "id": "1747133438492",
+    "createdAt": "2025-05-13T10:50:38.492Z"
+  },
+  {
+    "email": "turgut@ap.com",
+    "marketingConsent": true,
+    "dataProcessingConsent": true,
+    "subscriptionDate": "2025-05-14T12:45:59.117Z",
+    "id": "1747226759117",
+    "createdAt": "2025-05-14T12:45:59.117Z"
+  }
+]

@@ -1,0 +1,473 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+
+// Canlı Altın Fiyatları Bileşeni
+const GOLD_KEYS = [
+  { label: 'Gram Altın', key: 'gram' },
+  { label: 'Çeyrek Altın', key: 'ceyrek' },
+  { label: 'Yarım Altın', key: 'yarim' },
+  { label: 'Tam Altın', key: 'tam' },
+  { label: 'Cumhuriyet Altını', key: 'cumhuriyet' },
+  { label: 'Ons Altın', key: 'ons' },
+  { label: '22 Ayar Bilezik', key: 'bilezik' },
+  { label: '14 Ayar Altın', key: '14ayar' },
+];
+
+function parseGoldData(rawText: string) {
+  // Bigpara chunk'tan örnek veri parse
+  // Her başlık ve altındaki 4 satır: Alış, Satış, Değişim, Saat
+  // Sıralama: Gram Altın, 22 Ayar Bilezik, Ons Altın, ...
+  const lines = rawText.split('\n').filter(Boolean);
+  const result: any[] = [];
+  let i = 0;
+  while (i < lines.length) {
+    if (lines[i].startsWith('###')) {
+      const name = lines[i].replace(/^#+ /, '').replace(/\[|\]/g, '').split('(')[0].trim();
+      // Sonraki satırlarda fiyatlar
+      const buy = lines[i+2]?.replace(/,/g, '.');
+      const sell = lines[i+3]?.replace(/,/g, '.');
+      const change = lines[i+4];
+      const time = lines[i+5];
+      result.push({ name, buy, sell, change, time });
+      i += 6;
+    } else {
+      i++;
+    }
+  }
+  return result;
+}
+
+export function LiveGoldPrices() {
+  // Sadece bu altın türlerini sırayla göster
+  const GOLD_ORDER = [
+    'ALTIN (TL/GR)',
+    '22 Ayar Bilezik',
+    'Altın (ONS)',
+    'Cumhuriyet Altını',
+    'Yarım Altın',
+    'Çeyrek Altın',
+    '14 Ayar Altın TL/Gr',
+    'Tam Altın'
+  ];
+  const [prices, setPrices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function fetchGold() {
+      setLoading(true);
+      setError('');
+      try {
+        const res = await fetch('/api/live-gold');
+        if (!res.ok) throw new Error('Veri alınamadı');
+        const data = await res.json();
+        setPrices(data);
+      } catch (e: any) {
+        setError('Altın fiyatları alınamadı');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchGold();
+  }, []);
+
+  if (loading) {
+    return <div className="w-full flex justify-center items-center py-8"><span>Altın fiyatları yükleniyor...</span></div>;
+  }
+  if (error) {
+    return <div className="w-full flex justify-center items-center py-8 text-red-500">{error}</div>;
+  }
+  // Sadece seçili türleri ve sıralı göster
+  const filtered = GOLD_ORDER
+    .map((name) => prices.find((p: any) => p.name === name))
+    .filter(Boolean);
+
+  return (
+    <div className="w-full overflow-x-auto pb-4">
+      <div className="flex gap-4 min-w-max">
+        {filtered.map((item: any) => (
+          <div key={item.name} className="bg-white rounded-lg shadow p-4 min-w-[200px] flex flex-col items-center border border-gray-200">
+            <span className="font-bold text-yellow-700 text-lg mb-1">{item.name}</span>
+            <div className="flex flex-col items-center mb-2">
+              <span className="text-sm text-gray-500">Alış</span>
+              <span className="font-mono text-base text-green-700">{item.buy}</span>
+            </div>
+            <div className="flex flex-col items-center mb-2">
+              <span className="text-sm text-gray-500">Satış</span>
+              <span className="font-mono text-base text-red-700">{item.sell}</span>
+            </div>
+            <div className="flex flex-row items-center mb-1">
+              <span className={`font-bold text-sm ${item.change.startsWith('-') ? 'text-red-600' : 'text-green-600'}`}>{item.change}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+import Link from 'next/link'
+import Image from 'next/image'
+import { ArrowRight, ArrowUp, ArrowDown, RefreshCw, DollarSign } from 'lucide-react'
+
+// Altın verileri (gerçek bir API'dan alınacak şekilde düzenlenebilir)
+const altinFiyatlari = [
+  {
+    id: 1,
+    type: 'Gram Altın',
+    buyRate: 2345.78,
+    sellRate: 2347.65,
+    change: 0.35,
+    trend: 'up',
+    imageUrl: '/images/gold/gram-gold.png'
+  },
+  {
+    id: 2,
+    type: 'Çeyrek Altın',
+    buyRate: 3875.42,
+    sellRate: 3890.15,
+    change: 0.32,
+    trend: 'up',
+    imageUrl: '/images/gold/quarter-gold.png'
+  },
+  {
+    id: 3,
+    type: 'Yarım Altın',
+    buyRate: 7750.84,
+    sellRate: 7780.30,
+    change: 0.33,
+    trend: 'up',
+    imageUrl: '/images/gold/half-gold.png'
+  },
+  {
+    id: 4,
+    type: 'Tam Altın',
+    buyRate: 15501.68,
+    sellRate: 15560.60,
+    change: 0.34,
+    trend: 'up',
+    imageUrl: '/images/gold/full-gold.png'
+  },
+  {
+    id: 5,
+    type: 'Cumhuriyet Altını',
+    buyRate: 15950.25,
+    sellRate: 16050.75,
+    change: 0.30,
+    trend: 'up',
+    imageUrl: '/images/gold/republic-gold.png'
+  },
+  {
+    id: 6,
+    type: 'Ons Altın',
+    buyRate: 2345.78,
+    sellRate: 2346.92,
+    change: -0.12,
+    trend: 'down',
+    imageUrl: '/images/gold/ounce-gold.png'
+  },
+  {
+    id: 7,
+    type: '22 Ayar Bilezik',
+    buyRate: 2145.30,
+    sellRate: 2155.45,
+    change: 0.28,
+    trend: 'up',
+    imageUrl: '/images/gold/bracelet-gold.png'
+  },
+  {
+    id: 8,
+    type: '14 Ayar Altın',
+    buyRate: 1345.65,
+    sellRate: 1355.80,
+    change: 0.25,
+    trend: 'up',
+    imageUrl: '/images/gold/14k-gold.png'
+  }
+]
+
+// Altın hesapları
+const altinHesaplari = [
+  {
+    id: 1,
+    bankName: 'Akbank',
+    accountName: 'Altın Mevduat Hesabı',
+    imageUrl: '/images/banks/akbank.png',
+    features: [
+      'Gram altın cinsinden hesap açma',
+      'İnternet şubesi üzerinden açılabilir',
+      'Vade sonunda otomatik yenileme',
+      'Fiziki altın teslim imkanı'
+    ],
+    interestRate: '2.50',
+    minAmount: '5 gram',
+    term: '32 gün',
+    applicationLink: '/varliklar/altin/basvuru?bank=akbank'
+  },
+  {
+    id: 2,
+    bankName: 'Garanti BBVA',
+    accountName: 'e-Altın Vadeli Hesap',
+    imageUrl: '/images/banks/garanti.png',
+    features: [
+      'Gram altın cinsinden hesap açma',
+      'Mobil uygulama üzerinden açılabilir',
+      'Esnek vade seçenekleri',
+      'Fiziki altın teslim imkanı'
+    ],
+    interestRate: '2.45',
+    minAmount: '5 gram',
+    term: '32 gün',
+    applicationLink: '/varliklar/altin/basvuru?bank=garanti'
+  },
+  {
+    id: 3,
+    bankName: 'Yapı Kredi',
+    accountName: 'Altın Biriktiren Hesap',
+    imageUrl: '/images/banks/yapikredi.png',
+    features: [
+      'Düzenli altın biriktirme imkanı',
+      'Dijital kanallardan açılabilir',
+      'Vade sonunda otomatik yenileme',
+      'Fiziki altın teslim imkanı'
+    ],
+    interestRate: '2.40',
+    minAmount: '1 gram',
+    term: '32 gün',
+    applicationLink: '/varliklar/altin/basvuru?bank=yapikredi'
+  },
+  {
+    id: 4,
+    bankName: 'İş Bankası',
+    accountName: 'Altın Depo Hesabı',
+    imageUrl: '/images/banks/isbankasi.png',
+    features: [
+      'Gram altın cinsinden hesap açma',
+      'İnternet şubesi üzerinden açılabilir',
+      'Vade sonunda otomatik yenileme',
+      'Fiziki altın teslim imkanı'
+    ],
+    interestRate: '2.35',
+    minAmount: '5 gram',
+    term: '32 gün',
+    applicationLink: '/varliklar/altin/basvuru?bank=isbankasi'
+  }
+]
+
+export default function AltinPage() {
+  const [lastUpdate, setLastUpdate] = useState<string>('')
+  
+  useEffect(() => {
+    // Gerçek bir uygulamada burada API'dan altın fiyatları çekilebilir
+    const now = new Date()
+    setLastUpdate(now.toLocaleString('tr-TR'))
+  }, [])
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      {/* Canlı Altın Fiyatları - Bigpara entegrasyonu */}
+      <LiveGoldPrices />
+
+      {/* Altın Fiyatları Section */}
+      <div id="fiyatlar" className="mb-16">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-heading font-bold text-gray-800">Güncel Altın Fiyatları</h2>
+          <div className="flex items-center text-gray-500 text-sm">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            <span>Son güncelleme: {lastUpdate}</span>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {altinFiyatlari.map((altin) => (
+            <div key={altin.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+              <div className="p-4 flex items-center justify-between border-b border-gray-100">
+                <h3 className="font-bold text-gray-800">{altin.type}</h3>
+                <div className={`flex items-center ${altin.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                  {altin.trend === 'up' ? (
+                    <ArrowUp className="w-4 h-4 mr-1" />
+                  ) : (
+                    <ArrowDown className="w-4 h-4 mr-1" />
+                  )}
+                  <span>{Math.abs(altin.change).toFixed(2)}%</span>
+                </div>
+              </div>
+              <div className="p-4">
+                <div className="flex justify-between mb-2">
+                  <span className="text-gray-500 text-sm">Alış</span>
+                  <span className="font-semibold text-gray-800">{altin.buyRate.toFixed(2)} ₺</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500 text-sm">Satış</span>
+                  <span className="font-semibold text-gray-800">{altin.sellRate.toFixed(2)} ₺</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <p className="text-sm text-gray-500 italic">
+          * Altın fiyatları bilgi amaçlıdır. İşlem yapmadan önce kuyumcu veya bankanızdan güncel fiyatları teyit ediniz.
+        </p>
+      </div>
+
+      {/* Altın Yatırım Bilgileri */}
+      <div className="mb-16 bg-white rounded-xl p-8 shadow-md">
+        <h2 className="text-3xl font-heading font-bold text-gray-800 mb-6 text-center">Altın Yatırımı Hakkında</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Neden Altın Yatırımı?</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <span className="text-[#ff3d00] mr-2 font-bold">•</span>
+                <span className="text-gray-600">Altın, tarih boyunca değerini koruyan güvenli bir liman olarak kabul edilir.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-[#ff3d00] mr-2 font-bold">•</span>
+                <span className="text-gray-600">Enflasyona karşı koruma sağlar ve ekonomik belirsizlik dönemlerinde değerini koruma eğilimindedir.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-[#ff3d00] mr-2 font-bold">•</span>
+                <span className="text-gray-600">Portföy çeşitlendirmesi için ideal bir araçtır.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-[#ff3d00] mr-2 font-bold">•</span>
+                <span className="text-gray-600">Fiziki altın, dijital altın hesapları veya altın fonları gibi farklı yatırım seçenekleri sunar.</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Altın Yatırım Yöntemleri</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <span className="text-[#ff3d00] mr-2 font-bold">•</span>
+                <span className="text-gray-600"><strong>Fiziki Altın:</strong> Çeyrek, yarım, tam altın veya külçe altın alımı.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-[#ff3d00] mr-2 font-bold">•</span>
+                <span className="text-gray-600"><strong>Altın Hesapları:</strong> Bankalarda açılan gram altın cinsinden vadeli veya vadesiz hesaplar.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-[#ff3d00] mr-2 font-bold">•</span>
+                <span className="text-gray-600"><strong>Altın Fonları:</strong> Altına dayalı yatırım fonları.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-[#ff3d00] mr-2 font-bold">•</span>
+                <span className="text-gray-600"><strong>Altın ETF'leri:</strong> Borsada işlem gören altına dayalı yatırım fonları.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Altın Hesapları Section */}
+      <div id="hesaplar" className="mb-16">
+        <h2 className="text-3xl font-heading font-bold text-center text-gray-800 mb-10">En Avantajlı Altın Hesapları</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {altinHesaplari.map((hesap) => (
+            <div key={hesap.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-200">
+              <div className="p-6 bg-gray-50 flex justify-between items-center border-b border-gray-200">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800">{hesap.accountName}</h3>
+                  <p className="text-gray-600">{hesap.bankName}</p>
+                </div>
+                <div className="w-16 h-16 relative">
+                  <Image 
+                    src={hesap.imageUrl} 
+                    alt={`${hesap.bankName} ${hesap.accountName}`}
+                    width={64}
+                    height={64}
+                    className="object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = '/images/banks/default-bank.png';
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="p-6">
+                <div className="mb-6">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Hesap Özellikleri</h4>
+                  <ul className="space-y-2">
+                    {hesap.features.map((feature, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="text-[#ff3d00] mr-2">•</span>
+                        <span className="text-gray-600">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Faiz Oranı</p>
+                    <p className="font-semibold text-gray-800">%{hesap.interestRate}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Minimum Tutar</p>
+                    <p className="font-semibold text-gray-800">{hesap.minAmount}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Vade</p>
+                    <p className="font-semibold text-gray-800">{hesap.term}</p>
+                  </div>
+                </div>
+                <Link 
+                  href={hesap.applicationLink} 
+                  className="block w-full bg-[#ff3d00] hover:bg-[#e63600] text-white text-center font-bold py-3 px-4 rounded-lg transition-colors duration-300"
+                >
+                  Hemen Başvur
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* SSS Section */}
+      <div className="bg-gray-50 rounded-xl p-8 mb-12">
+        <h2 className="text-3xl font-heading font-bold text-center text-gray-800 mb-8">Sıkça Sorulan Sorular</h2>
+        <div className="max-w-3xl mx-auto space-y-6">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <h3 className="text-xl font-bold text-gray-800 mb-3">Altın hesabı açmak için ne gerekir?</h3>
+            <p className="text-gray-600">
+              Altın hesabı açmak için kimlik belgeniz ve hesabı açacağınız minimum gram altın tutarı ile bankanıza başvurmanız yeterlidir. Birçok banka internet şubesi veya mobil uygulaması üzerinden de altın hesabı açmanıza olanak tanır.
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <h3 className="text-xl font-bold text-gray-800 mb-3">Altın hesabındaki altınlarımı fiziki olarak teslim alabilir miyim?</h3>
+            <p className="text-gray-600">
+              Evet, birçok banka altın hesaplarındaki altınları fiziki olarak teslim etme imkanı sunmaktadır. Ancak bu işlem için genellikle minimum bir miktar (örneğin 1 kg) ve belirli bir işlem ücreti talep edilebilir. Ayrıca, fiziki teslimat için önceden randevu almanız gerekebilir.
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <h3 className="text-xl font-bold text-gray-800 mb-3">Altın hesabı açmanın avantajları nelerdir?</h3>
+            <p className="text-gray-600">
+              Altın hesabı açmak, fiziki altın satın almanın getirdiği saklama, güvenlik ve saflık endişelerini ortadan kaldırır. Ayrıca, vadeli altın hesapları ile altınlarınız üzerinden faiz kazancı elde edebilirsiniz. Dijital olarak altın alım satımı yapabilir ve istediğiniz zaman TL'ye çevirebilirsiniz.
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <h3 className="text-xl font-bold text-gray-800 mb-3">Altın fiyatları neden sürekli değişir?</h3>
+            <p className="text-gray-600">
+              Altın fiyatları, küresel ekonomik gelişmeler, dolar kuru, enflasyon beklentileri, jeopolitik riskler, merkez bankalarının altın alım satımları ve arz-talep dengesi gibi birçok faktöre bağlı olarak sürekli değişir. Altın, genellikle ekonomik belirsizlik dönemlerinde değer kazanma eğilimindedir.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-heading font-bold text-gray-800 mb-6">Birikimlerinizi Altında Değerlendirin</h2>
+        <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
+          Güncel altın fiyatlarını takip edin, en avantajlı altın hesaplarını karşılaştırın ve 
+          birikimlerinizi altın olarak değerlendirerek finansal hedeflerinize ulaşın.
+        </p>
+        <Link 
+          href="#hesaplar" 
+          className="inline-block bg-[#ff3d00] hover:bg-[#e63600] text-white font-bold py-3 px-8 rounded-full transition-colors duration-300"
+        >
+          Hesapları Karşılaştır
+        </Link>
+      </div>
+    </div>
+  )
+}

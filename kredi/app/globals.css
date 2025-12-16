@@ -1,0 +1,295 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&family=Roboto+Mono&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS değişkenleri */
+:root {
+  /* Font ailesi */
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Open Sans', sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+  /* Ana Renkler */
+  --color-primary: #ff3d00;
+  --color-primary-dark: #ff3d00;
+  --color-primary-light: #ff3d00;
+  --color-secondary: #1A1A1A;
+  --color-secondary-light: #333333;
+  --color-medium-gray: #777777;
+  
+  /* Fonksiyonel Renkler */
+  --color-success: #4CAF50;
+  --color-warning: #FFC107;
+  --color-destructive: #F44336;
+  --color-info: #2196F3;
+  
+  /* Menü modern dark theme için ek stiller */
+  --color-menu-background: #232323;
+  --color-menu-border: #ff3d00;
+  --color-menu-text: #fff;
+  --color-menu-hover: #353535;
+  --color-menu-active: #ff3d00;
+  --color-menu-login: #ff3d00;
+  
+  /* Arka Plan Renkleri */
+  --color-background: #FFFFFF;
+  --color-background-secondary: #F5F5F5;
+  
+  /* Geçişler */
+  --transition-default: 0.3s ease;
+  --transition-slow: 0.5s ease-in-out;
+  --transition-fast: 0.2s ease-out;
+
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  @apply bg-background;
+  font-family: var(--font-body);
+}
+
+/* Animasyonlar */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-in-out;
+
+}
+
+@layer base {
+  html {
+    @apply text-secondary;
+  }
+  
+  input,
+  select {
+    @apply text-gray-900;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    @apply font-heading;
+  }
+  
+  h1 {
+    font-size: 32px;
+  }
+  
+  h2 {
+    font-size: 24px;
+  }
+  
+  h3 {
+    font-size: 20px;
+  }
+  
+  h4 {
+    font-size: 18px;
+  }
+}
+
+@layer components {
+  /* Buton Stilleri */
+  .btn-primary {
+    @apply bg-primary text-white py-3 px-6 rounded-button font-medium hover:bg-primary-dark transition duration-default;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent border-2 border-primary text-primary py-3 px-6 rounded-button font-medium hover:bg-primary hover:text-white transition duration-default;
+  }
+  
+  .btn-tertiary {
+    @apply bg-transparent text-secondary py-3 px-6 rounded-button font-medium hover:bg-background-secondary transition duration-default;
+  }
+
+  /* Form Elementleri */
+  .input-field {
+    @apply bg-background border border-gray-200 rounded-input py-3 px-4 w-full focus:outline-none focus:border-2 focus:border-primary transition duration-default;
+  }
+  
+  /* Kartlar */
+  .card {
+    @apply bg-background border border-gray-100 rounded-card p-5 shadow-card hover:shadow-card-hover transition duration-default;
+  }
+  
+  .card-highlight {
+    @apply border-l-4 border-l-primary shadow-card-hover;
+  }
+
+  /* MCP Transparent Selection */
+  .mcp-transparent-selection::selection {
+    @apply bg-primary bg-opacity-30;
+    color: inherit;
+  }
+
+  .mcp-transparent-selection *::selection {
+    @apply bg-primary bg-opacity-30;
+    color: inherit;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .gradient-orange {
+    @apply bg-orange-gradient;
+  }
+  
+  .gradient-black {
+    @apply bg-black-gradient;
+  }
+
+  /* Selection Transparency */
+  .transparent-selection::selection {
+    background-color: rgba(255, 61, 0, 0.3);
+    color: inherit;
+  }
+
+  .ticker-wrapper {
+    height: 2rem;
+  }
+
+  .animate-scroll {
+    animation: scroll 40s linear infinite;
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .animate-slide-down {
+    animation: slideDown 0.5s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.keen-slider {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.keen-slider:not([data-keen-slider-disabled]) {
+  align-items: flex-start;
+  cursor: grab;
+  touch-action: pan-y;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.keen-slider:not([data-keen-slider-disabled]):active {
+  cursor: grabbing;
+}
+
+.keen-slider:not([data-keen-slider-disabled]) .keen-slider__slide {
+  display: flex;
+  min-height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.home-carousel {
+  width: 100%;
+  height: auto;
+  max-height: 504px;
+  position: relative;
+}
+
+.home-carousel .swiper-slide img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  max-height: 504px;
+}
+
+/* Global Selection Styles */
+::selection {
+  background-color: rgba(255, 107, 0, 0.3);
+  color: inherit;
+}
+
+/* Dropdown menu styles */
+.group:hover .group-hover\:block {
+  display: block !important;
+} 
