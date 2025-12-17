@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -15,6 +17,16 @@ const nextConfig = {
       },
     ],
   },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins.push(
+        new (require('webpack').DefinePlugin)({
+          '__dirname': JSON.stringify(process.cwd()),
+        })
+      );
+    }
+    return config;
+  },
 }
 
-module.exports = nextConfig 
+module.exports = nextConfig
