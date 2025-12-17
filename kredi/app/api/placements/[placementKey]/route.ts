@@ -17,6 +17,7 @@ interface AdvertisementReturn {
 }
 
 // Get the ad(s) for a specific placement for public consumption
+// Force redeploy
 export async function GET(request: Request, { params }: { params: Params }) {
   const { placementKey } = params;
 
