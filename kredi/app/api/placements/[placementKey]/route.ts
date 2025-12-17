@@ -60,11 +60,11 @@ export async function GET(request: Request, { params }: { params: Params }) {
           if (adObject && adObject.is_active) {
               adsToReturn.push(adObject);
           }
-      } else if (placementData.ad_groups && placementData.ad_groups.ad_group_mappings) {
+      } else if (placementData.ad_groups && placementData.ad_groups.length > 0 && placementData.ad_groups[0].ad_group_mappings) {
           // Case 2: An ad group is assigned
-          const activeAdsInGroup = placementData.ad_groups.ad_group_mappings
-              .flatMap(mapping => [mapping.advertisements])
-              .filter((ad: AdvertisementReturn) => ad && ad.is_active);
+          const activeAdsInGroup = placementData.ad_groups[0].ad_group_mappings
+              .flatMap(mapping => mapping.advertisements ? [mapping.advertisements] : [])
+              .filter((ad: AdvertisementReturn | null): ad is AdvertisementReturn => ad !== null && ad.is_active);
           
           // For all placements with ad groups (including carousels), return one random ad
           if (activeAdsInGroup.length > 0) {
