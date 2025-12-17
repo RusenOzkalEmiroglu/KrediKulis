@@ -8,6 +8,8 @@ import EmailSubscription from './components/EmailSubscription'
 import HomeCarousel from './components/HomeCarousel'
 import SpecialCampaigns from './components/SpecialCampaigns'
 
+export const dynamic = 'force-dynamic'
+
 // This page is now simplified to isolate the 500 error.
 // The Supabase data fetching has been temporarily removed.
 
