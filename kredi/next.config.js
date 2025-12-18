@@ -17,16 +17,6 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config, { isServer, webpack }) => {
-    if (isServer && config.name !== 'edge-server') {
-      config.plugins.push(
-        new webpack.DefinePlugin({
-          '__dirname': JSON.stringify(process.cwd()),
-        })
-      );
-    }
-    return config;
-  },
 
 }
 
