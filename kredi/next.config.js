@@ -17,16 +17,7 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.plugins.push(
-        new (require('webpack').DefinePlugin)({
-          '__dirname': JSON.stringify(process.cwd()),
-        })
-      );
-    }
-    return config;
-  },
+
 }
 
 module.exports = nextConfig
