@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const { data, error } = await supabaseAdmin
       .from('consumer_loans')
-      .select(`*, application_url, bsmv, kkdf, bank:banks (id, name, logo, color, bsmv_rate, kkdf_rate)`);
+      .select(`*, application_url, bank:banks (id, name, logo, color, bsmv_rate, kkdf_rate)`);
 
     if (error) throw error;
 
