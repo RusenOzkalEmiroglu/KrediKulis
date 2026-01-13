@@ -1,4 +1,4 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers';
 
 import AnasayfaHesaplamaTabs from './components/AnasayfaHesaplamaTabs'
@@ -10,11 +10,20 @@ import SpecialCampaigns from './components/SpecialCampaigns'
 
 export const dynamic = 'force-dynamic'
 
-// This page is now simplified to isolate the 500 error.
-// The Supabase data fetching has been temporarily removed.
-
 export default async function Home() {
-  const supabase = createServerComponentClient({ cookies });
+  const cookieStore = cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+      },
+    }
+  );
+
   const { data: banks } = await supabase.from('banks').select('*');
 
   const shuffledBanks = banks ? [...banks].sort(() => Math.random() - 0.5) : [];
