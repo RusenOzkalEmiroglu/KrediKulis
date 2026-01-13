@@ -23,7 +23,6 @@
     "framer-motion": "^12.11.0",
     "lucide-react": "^0.329.0",
     "next": "^14.1.0",
-    "papaparse": "^5.5.2",
     "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
     "react-datepicker": "^4.25.0",
@@ -34,7 +33,6 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.16",
-    "@types/papaparse": "^5.5.1",
     "@types/react": "^18.2.52",
     "@types/react-datepicker": "^4.16.0",
     "@types/react-dom": "^18.2.18",
