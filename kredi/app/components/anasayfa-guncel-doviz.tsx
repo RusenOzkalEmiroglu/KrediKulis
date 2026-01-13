@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { parseString } from 'xml2js';
+import { XMLParser } from 'fast-xml-parser';
 
 interface ExchangeRate {
   code: string;
@@ -98,28 +98,28 @@ export default function AnasayfaGuncelDoviz({
   const fetchRatesFromTCMB = async () => {
     try {
       const response = await axios.get('/api/tcmb-proxy');
-      parseString(response.data, (err: any, result: any) => {
-        if (err) {
-          console.error('XML parsing error:', err);
-          return;
-        }
-
-        const currencies = result.Tarih_Date.Currency;
-        const parsedRates: ExchangeRate[] = currencies
-          .filter((currency: any) => enabledCurrencies.includes(currency.$.Kod))
-          .map((currency: any) => ({
-            code: currency.$.Kod,
-            name: currencyNames[currency.$.Kod] || currency.Isim[0],
-            rate: parseFloat(currency.ForexSelling[0].replace(',', '.'))
-          }));
-
-        const orderedRates = enabledCurrencies
-          .map(code => parsedRates.find(rate => rate.code === code))
-          .filter((rate): rate is ExchangeRate => rate !== undefined);
-
-        setRates(orderedRates);
-        setLoading(false);
+      
+      const parser = new XMLParser({
+        ignoreAttributes: false,
+        attributeNamePrefix: ""
       });
+      const result = parser.parse(response.data);
+
+      const currencies = result.Tarih_Date.Currency;
+      const parsedRates: ExchangeRate[] = currencies
+        .filter((currency: any) => enabledCurrencies.includes(currency.Kod))
+        .map((currency: any) => ({
+          code: currency.Kod,
+          name: currencyNames[currency.Kod] || currency.Isim,
+          rate: parseFloat(currency.ForexSelling.toString().replace(',', '.'))
+        }));
+
+      const orderedRates = enabledCurrencies
+        .map(code => parsedRates.find(rate => rate.code === code))
+        .filter((rate): rate is ExchangeRate => rate !== undefined);
+
+      setRates(orderedRates);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching TCMB rates:', error);
       setLoading(false);

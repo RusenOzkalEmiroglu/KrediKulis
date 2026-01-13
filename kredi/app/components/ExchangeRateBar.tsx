@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { parseString } from 'xml2js';
+import { XMLParser } from 'fast-xml-parser';
 
 interface ExchangeRate {
   code: string;
@@ -72,28 +72,27 @@ export default function ExchangeRateBar() {
       const proxyUrl = '/api/tcmb-proxy'; // CORS hatalarını önlemek için bir proxy kullan
       const response = await axios.get(proxyUrl);
       
-      // XML verisini parse et
-      parseString(response.data, (err: any, result: any) => {
-        if (err) {
-          throw new Error('XML parsing error');
-        }
-        
-        // XML'den kurları çıkar
-        const currencies = result.Tarih_Date.Currency;
-        const parsedRates: ExchangeRate[] = currencies.map((currency: any) => {
-          const code = currency.$.Kod;
-          return {
-            code,
-            name: currencyNames[code] || currency.Isim[0],
-            rate: parseFloat(currency.ForexSelling[0].replace(',', '.'))
-          };
-        });
-        
-        // İlk 20 kuru seç
-        const topRates = parsedRates.slice(0, 20);
-        setRates(topRates);
-        setError(null);
+      const parser = new XMLParser({
+        ignoreAttributes: false,
+        attributeNamePrefix: ""
       });
+      const result = parser.parse(response.data);
+      
+      // XML'den kurları çıkar
+      const currencies = result.Tarih_Date.Currency;
+      const parsedRates: ExchangeRate[] = currencies.map((currency: any) => {
+        const code = currency.Kod;
+        return {
+          code,
+          name: currencyNames[code] || currency.Isim,
+          rate: parseFloat(currency.ForexSelling.toString().replace(',', '.'))
+        };
+      });
+      
+      // İlk 20 kuru seç
+      const topRates = parsedRates.slice(0, 20);
+      setRates(topRates);
+      setError(null);
     } catch (error) {
       console.error('TCMB döviz kurları çekilirken hata oluştu:', error);
       setError('Döviz kurları yüklenirken bir hata oluştu');
