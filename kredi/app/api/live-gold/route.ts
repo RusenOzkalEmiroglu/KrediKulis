@@ -2,7 +2,9 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const cheerio = (await import('cheerio')).default || await import('cheerio');
+    const cheerioModule = await import('cheerio');
+    // @ts-ignore
+    const cheerio = cheerioModule.default || cheerioModule;
     const res = await fetch('https://bigpara.hurriyet.com.tr/altin/', {
       headers: {
         'User-Agent':

@@ -11,7 +11,9 @@ export const revalidate = 0;
 export async function GET() {
   console.log('API çağrısı yapıldı:', new Date().toLocaleTimeString());
   try {
-    const cheerio = (await import('cheerio')).default || await import('cheerio');
+    const cheerioModule = await import('cheerio');
+    // @ts-ignore
+    const cheerio = cheerioModule.default || cheerioModule;
     // BigPara'dan altın fiyatlarını çek
     const response = await fetch('https://bigpara.hurriyet.com.tr/altin/', {
       headers: {
