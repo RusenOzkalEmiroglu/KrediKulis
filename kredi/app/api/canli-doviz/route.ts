@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import axios from 'axios';
 
 // Cache control
 export const dynamic = 'force-dynamic';

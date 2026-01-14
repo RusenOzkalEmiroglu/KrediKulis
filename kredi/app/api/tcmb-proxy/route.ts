@@ -1,15 +1,13 @@
 import { NextResponse } from 'next/server';
-import axios from 'axios';
 
 export async function GET() {
   try {
     // TCMB'nin günlük döviz kurları XML servisini çağır
-    const response = await axios.get('https://www.tcmb.gov.tr/kurlar/today.xml', {
-      responseType: 'text'
-    });
+    const response = await fetch('https://www.tcmb.gov.tr/kurlar/today.xml');
+    const xmlData = await response.text();
     
     // XML verisini doğrudan döndür
-    return new NextResponse(response.data, {
+    return new NextResponse(xmlData, {
       headers: {
         'Content-Type': 'application/xml; charset=utf-8'
       }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import { XMLParser } from 'fast-xml-parser';
 
 interface ExchangeRate {
@@ -97,13 +96,14 @@ export default function AnasayfaGuncelDoviz({
 
   const fetchRatesFromTCMB = async () => {
     try {
-      const response = await axios.get('/api/tcmb-proxy');
+      const response = await fetch('/api/tcmb-proxy');
+      const textData = await response.text();
       
       const parser = new XMLParser({
         ignoreAttributes: false,
         attributeNamePrefix: ""
       });
-      const result = parser.parse(response.data);
+      const result = parser.parse(textData);
 
       const currencies = result.Tarih_Date.Currency;
       const parsedRates: ExchangeRate[] = currencies
