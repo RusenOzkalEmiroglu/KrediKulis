@@ -1,13 +1,8 @@
 import { NextResponse } from 'next/server';
-import * as cheerio from 'cheerio';
 
 interface GoldItem {
   name: string;
-  buyPrice: string;
-  sellPrice: string;
-  change: string;
-  updateTime: string;
-  url: string;
+// ...
 }
 
 export const dynamic = 'force-dynamic';
@@ -16,6 +11,7 @@ export const revalidate = 0;
 export async function GET() {
   console.log('API çağrısı yapıldı:', new Date().toLocaleTimeString());
   try {
+    const cheerio = (await import('cheerio')).default || await import('cheerio');
     // BigPara'dan altın fiyatlarını çek
     const response = await fetch('https://bigpara.hurriyet.com.tr/altin/', {
       headers: {

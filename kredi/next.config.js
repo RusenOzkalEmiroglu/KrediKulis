@@ -1,14 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config, { webpack }) => {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        __dirname: JSON.stringify('.'),
-        __filename: JSON.stringify(config.output.filename),
-      })
-    );
-    return config;
-  },
   images: {
     domains: ['gmqfjtgbjprhxbxbhhms.supabase.co', 'uxtlcbcnwmxeyszhlewf.supabase.co'],
     remotePatterns: [
@@ -24,7 +15,6 @@ const nextConfig = {
       },
     ],
   },
-
 }
 
 module.exports = nextConfig

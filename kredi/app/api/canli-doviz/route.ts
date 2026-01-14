@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
-import * as cheerio from 'cheerio';
 
 // Cache control
 export const dynamic = 'force-dynamic';
@@ -196,6 +195,7 @@ const fallbackCurrencies: Currency[] = [
 
 export async function GET() {
   try {
+    const cheerio = (await import('cheerio')).default || await import('cheerio');
     // Fetch the HTML content from canlidoviz.com
     const response = await axios.get('https://canlidoviz.com/doviz-kurlari', {
       headers: {

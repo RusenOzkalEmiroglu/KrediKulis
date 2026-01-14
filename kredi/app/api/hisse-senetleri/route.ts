@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import * as cheerio from 'cheerio';
+// cheerio removed
 import { NextRequest } from 'next/server';
 import { ilk100Hisse } from './bist-data';
 

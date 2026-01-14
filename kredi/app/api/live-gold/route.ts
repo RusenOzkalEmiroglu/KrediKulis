@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import * as cheerio from 'cheerio';
 
 export async function GET() {
   try {
+    const cheerio = (await import('cheerio')).default || await import('cheerio');
     const res = await fetch('https://bigpara.hurriyet.com.tr/altin/', {
       headers: {
         'User-Agent':
