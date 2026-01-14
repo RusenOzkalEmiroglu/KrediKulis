@@ -52,7 +52,7 @@ export async function GET(request: Request) {
   }, {} as Record<string, { name: string; views: number; clicks: number }>);
 
   // Convert object to array
-  const result = Object.values(counts).sort((a, b) => b.views - a.views);
+  const result = Object.values(counts).sort((a: any, b: any) => b.views - a.views);
 
   return NextResponse.json(result);
 }
