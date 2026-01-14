@@ -3,6 +3,10 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['cheerio'],
   },
+  webpack: (config) => {
+    config.externals = [...(config.externals || []), { cheerio: 'commonjs cheerio' }];
+    return config;
+  },
   images: {
     domains: ['gmqfjtgbjprhxbxbhhms.supabase.co', 'uxtlcbcnwmxeyszhlewf.supabase.co'],
     remotePatterns: [
