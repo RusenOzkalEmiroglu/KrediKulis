@@ -1,14 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ['cheerio'],
-    outputFileTracingExcludes: {
-      '*': [
-        'node_modules/cheerio',
-        'node_modules/cheerio/**/*',
-      ],
-    },
-  },
   webpack: (config, { webpack }) => {
     config.plugins.push(
       new webpack.DefinePlugin({
