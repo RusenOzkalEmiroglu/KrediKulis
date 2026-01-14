@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     let filteredHisseler = hisseler;
     if (search) {
       const searchLower = search.toLowerCase();
-      filteredHisseler = hisseler.filter(hisse => 
+      filteredHisseler = hisseler.filter((hisse: any) => 
         hisse.kod.toLowerCase().includes(searchLower) || 
         hisse.isim.toLowerCase().includes(searchLower)
       );

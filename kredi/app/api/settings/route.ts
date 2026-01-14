@@ -17,7 +17,7 @@ export async function GET() {
     }
 
     // Transform the array into a key-value object for easier use on the client
-    const settingsObject = data.reduce((acc, setting) => {
+    const settingsObject = data.reduce((acc: any, setting: any) => {
         if(setting.key) {
             acc[setting.key] = setting.value;
         }

@@ -31,7 +31,7 @@ export async function GET() {
     const goldItems: GoldItem[] = [];
 
     // tBody sınıfı içindeki verileri çek
-    $('.tBody ul').each((index, element) => {
+    $('.tBody ul').each((index: any, element: any) => {
       const cells = $(element).find('li');
       
       // En az 4 hücre varsa (isim, alış, satış, değişim, güncelleme)

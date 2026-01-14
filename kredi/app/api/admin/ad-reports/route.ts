@@ -31,7 +31,7 @@ export async function GET(request: Request) {
   }
 
   // Process data to get counts
-  const counts = data.reduce((acc, report) => {
+  const counts = data.reduce((acc: any, report: any) => {
     if (!report.advertisements) return acc; // Skip if ad was deleted
 
     const adId = report.advertisement_id;

@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     try {
         const allFiles = await listAllFiles(); // Initial call without relative path
 
-        const filesWithUrls = allFiles.map(file => {
+        const filesWithUrls = allFiles.map((file: any) => {
             const { data: { publicUrl } } = supabase.storage.from(mainBucket).getPublicUrl(file.fullPath);
             return {
                 id: file.id,

@@ -28,7 +28,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  const formattedData = data.map(card => ({
+  const formattedData = data.map((card: any) => ({
     ...card,
     bank_name: card.banks?.name,
     bank_color: card.banks?.color,

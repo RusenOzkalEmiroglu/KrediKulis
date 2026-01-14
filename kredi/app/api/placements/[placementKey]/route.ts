@@ -64,8 +64,8 @@ export async function GET(request: Request, { params }: { params: Params }) {
       } else if (placementData.ad_groups && placementData.ad_groups.length > 0 && placementData.ad_groups[0].ad_group_mappings) {
           // Case 2: An ad group is assigned
           const activeAdsInGroup = placementData.ad_groups[0].ad_group_mappings
-              .flatMap(mapping => mapping.advertisements || []) // Use flatMap to handle the nested array
-              .filter(ad => ad && ad.is_active);
+              .flatMap((mapping: any) => mapping.advertisements || []) // Use flatMap to handle the nested array
+              .filter((ad: any) => ad && ad.is_active);
           
           // For all placements with ad groups (including carousels), return one random ad
           if (activeAdsInGroup.length > 0) {
@@ -75,7 +75,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
       }
   // 3. Log view events (fire-and-forget)
   if (adsToReturn.length > 0) {
-    const reports = adsToReturn.map(ad => ({
+    const reports = adsToReturn.map((ad: any) => ({
       advertisement_id: ad.id,
       event_type: 'view',
     }));

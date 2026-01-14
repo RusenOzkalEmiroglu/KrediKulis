@@ -22,7 +22,7 @@ export async function GET() {
     if (loansData && banksData) {
       const sanitizeString = (str: string) => str ? str.toLowerCase().replace(/[^a-z0-9]/gi, '') : '';
 
-      const combinedData = loansData.map(loan => {
+      const combinedData = loansData.map((loan: any) => {
         const sanitizedLoanBankName = sanitizeString(loan.bank_name);
         if (!sanitizedLoanBankName) {
           return { ...loan, bank: undefined };

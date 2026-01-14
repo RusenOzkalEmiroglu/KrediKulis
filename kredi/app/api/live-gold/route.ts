@@ -23,7 +23,7 @@ export async function GET() {
       console.warn('No rows found in .tBody. Check if Bigpara structure changed or access is blocked.');
     }
     const results: any[] = [];
-    rows.each((_, row) => {
+    rows.each((_: any, row: any) => {
       const cols = $(row).find('td');
       if (cols.length >= 4) {
         results.push({

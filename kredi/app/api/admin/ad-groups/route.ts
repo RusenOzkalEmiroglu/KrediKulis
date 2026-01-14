@@ -23,9 +23,9 @@ export async function GET(request: Request) {
   }
 
   // The data structure from Supabase is nested. We need to flatten it for the client.
-  const formattedData = data.map(group => ({
+  const formattedData = data.map((group: any) => ({
     ...group,
-    advertisements: group.ad_group_mappings.map(mapping => mapping.advertisements)
+    advertisements: group.ad_group_mappings.map((mapping: any) => mapping.advertisements)
   }));
 
   return NextResponse.json(formattedData);
