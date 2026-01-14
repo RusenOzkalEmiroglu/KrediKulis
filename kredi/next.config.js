@@ -3,8 +3,13 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['cheerio'],
   },
-  webpack: (config) => {
-    config.externals = [...(config.externals || []), { cheerio: 'commonjs cheerio' }];
+  webpack: (config, { webpack }) => {
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        __dirname: JSON.stringify('.'),
+        __filename: JSON.stringify(config.output.filename),
+      })
+    );
     return config;
   },
   images: {
