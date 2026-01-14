@@ -3,6 +3,15 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['cheerio'],
   },
+  webpack: (config) => {
+    config.plugins.push(
+      new config.webpack.DefinePlugin({
+        'global.GENTLY': 'false',
+        __dirname: '""',
+      })
+    );
+    return config;
+  },
   images: {
     domains: ['gmqfjtgbjprhxbxbhhms.supabase.co', 'uxtlcbcnwmxeyszhlewf.supabase.co'],
     remotePatterns: [
