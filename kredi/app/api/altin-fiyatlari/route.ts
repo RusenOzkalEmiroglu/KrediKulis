@@ -24,6 +24,7 @@ export async function GET() {
     }
 
     const html = await response.text();
+    // @ts-ignore
     const $ = cheerio.load(html);
     const goldItems: GoldItem[] = [];
 

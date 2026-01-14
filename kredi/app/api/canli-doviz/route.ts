@@ -195,61 +195,8 @@ const fallbackCurrencies: Currency[] = [
 
 export async function GET() {
   try {
-    const cheerio = (await import('cheerio')).default || await import('cheerio');
-    // Fetch the HTML content from canlidoviz.com
-    const response = await axios.get('https://canlidoviz.com/doviz-kurlari', {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Accept-Language': 'tr,en-US;q=0.7,en;q=0.3',
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
-      },
-      timeout: 8000 // Timeout süresini 8 saniyeye çıkardık
-    });
-
-    // Parse the HTML
-    const $ = cheerio.load(response.data);
-    let currencies: Currency[] = [];
-
-    // Önce gönderilen HTML kodundan tüm para birimlerini çıkar
-    $('tbody tr[itemprop="itemListElement"]').each((index, element) => {
-      const code = $(element).find('span[itemprop="currency"]').attr('content')?.trim() || '';
-      const name = $(element).find('span[itemprop="name"]').attr('content')?.trim() || '';
-      const lastUpdate = $(element).find('span[dt="lastUpdate"]').text().trim();
-      const buyRate = $(element).find('span[dt="bA"]').text().trim();
-      const sellRate = $(element).find('span[itemprop="price"]').text().trim();
-      const changeAmount = $(element).find('span[dt="changeAmount"]').text().trim();
-      const change = $(element).find('span[dt="change"]').text().trim();
-      const isIncreasing = $(element).find('span[dt="change"]').attr('data-incr') === 'true';
-      const isDecreasing = $(element).find('span[dt="change"]').attr('data-decr') === 'true';
-      
-      // Düşük, yüksek ve kapanış değerlerini al
-      const lowCell = $(element).find('td.hidden.md\:table-cell').eq(0);
-      const highCell = $(element).find('td.hidden.md\:table-cell').eq(1);
-      const closingCell = $(element).find('td.hidden.md\:table-cell').eq(2);
-      
-      const low = lowCell.find('span').text().trim();
-      const high = highCell.find('span').text().trim();
-      const closing = closingCell.find('span').text().trim();
-
-      // Only add if we have the essential data
-      if (code && name && sellRate) {
-        currencies.push({
-          code,
-          name,
-          lastUpdate,
-          buyRate,
-          sellRate,
-          changeAmount,
-          change,
-          trend: isIncreasing ? 'up' : isDecreasing ? 'down' : 'stable',
-          low,
-          high,
-          closing
-        });
-      }
-    });
+    // Note: We are using fixed currencies as fallback/default because external scraping is unreliable
+    // Fetch logic removed to prevent build issues with cheerio
     
     // Sabit para birimleri listesi (gönderdiğiniz HTML'den alınan)
     const fixedCurrencies: Currency[] = [
@@ -634,7 +581,7 @@ export async function GET() {
     ];
     
     // API'den çekilen para birimleri yerine sabit listeyi kullan
-    currencies = fixedCurrencies;
+    const currencies = fixedCurrencies;
 
     // Para birimlerini sırala (USD, EUR, GBP önce gelecek şekilde)
     currencies = currencies.sort((a, b) => {

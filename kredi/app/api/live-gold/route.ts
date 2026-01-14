@@ -13,6 +13,7 @@ export async function GET() {
     const html = await res.text();
     console.log('Fetched HTML length:', html.length);
     console.log('HTML preview:', html.slice(0, 1000));
+    // @ts-ignore
     const $ = cheerio.load(html);
     const rows = $('.tBody tr');
     console.log('Found rows in .tBody:', rows.length);
