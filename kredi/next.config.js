@@ -9,14 +9,16 @@ const nextConfig = {
       ],
     },
   },
-  webpack: (config, { webpack }) => {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'global.GENTLY': 'false',
-        __dirname: '""',
-        __filename: '""',
-      })
-    );
+  webpack: (config, { webpack, isServer }) => {
+    if (isServer) {
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          'global.GENTLY': 'false',
+          __dirname: '""',
+          __filename: '""',
+        })
+      );
+    }
     return config;
   },
   images: {
