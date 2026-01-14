@@ -13,6 +13,7 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function GET() {
+  /*
   console.log('API çağrısı yapıldı:', new Date().toLocaleTimeString());
   try {
     const cheerioModule = await import('cheerio');
@@ -73,4 +74,6 @@ export async function GET() {
       { status: 500 }
     );
   }
+  */
+  return NextResponse.json([]);
 }

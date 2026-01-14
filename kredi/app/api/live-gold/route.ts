@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
+  /*
   try {
     const cheerioModule = await import('cheerio');
     // @ts-ignore
@@ -38,4 +39,6 @@ export async function GET() {
   } catch (e) {
     return NextResponse.json([], { status: 500 });
   }
+  */
+  return NextResponse.json([]);
 }
