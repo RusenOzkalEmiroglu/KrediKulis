@@ -3,9 +3,9 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['cheerio'],
   },
-  webpack: (config) => {
+  webpack: (config, { webpack }) => {
     config.plugins.push(
-      new config.webpack.DefinePlugin({
+      new webpack.DefinePlugin({
         'global.GENTLY': 'false',
         __dirname: '""',
       })
