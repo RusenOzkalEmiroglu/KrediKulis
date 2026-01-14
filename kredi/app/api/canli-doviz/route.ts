@@ -581,10 +581,10 @@ export async function GET() {
     ];
     
     // API'den çekilen para birimleri yerine sabit listeyi kullan
-    const currencies = fixedCurrencies;
+    let currencies = fixedCurrencies;
 
     // Para birimlerini sırala (USD, EUR, GBP önce gelecek şekilde)
-    currencies = currencies.sort((a, b) => {
+    currencies = [...currencies].sort((a, b) => {
       const priorityCodes = ['USD', 'EUR', 'GBP', 'CHF', 'JPY', 'CAD', 'AUD'];
       const aPriority = priorityCodes.indexOf(a.code);
       const bPriority = priorityCodes.indexOf(b.code);
