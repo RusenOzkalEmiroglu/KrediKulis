@@ -2,7 +2,11 @@ import { NextResponse } from 'next/server';
 
 interface GoldItem {
   name: string;
-// ...
+  buyPrice: string;
+  sellPrice: string;
+  change: string;
+  updateTime: string;
+  url: string;
 }
 
 export const dynamic = 'force-dynamic';
