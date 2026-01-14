@@ -1,13 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ['cheerio'],
-  },
   webpack: (config, { webpack }) => {
     config.plugins.push(
       new webpack.DefinePlugin({
         'global.GENTLY': 'false',
         __dirname: '""',
+        __filename: '""',
       })
     );
     return config;
