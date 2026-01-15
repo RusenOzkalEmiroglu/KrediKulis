@@ -1,5 +1,4 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { cookies } from 'next/headers';
+import { createClient } from '@/lib/supabase-server'
 
 import AnasayfaHesaplamaTabs from './components/AnasayfaHesaplamaTabs'
 import AnasayfaGuncelDoviz from './components/anasayfa-guncel-doviz'
@@ -11,18 +10,7 @@ import SpecialCampaigns from './components/SpecialCampaigns'
 export const dynamic = 'force-dynamic'
 
 export default async function Home() {
-  const cookieStore = cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
-        },
-      },
-    }
-  );
+  const supabase = createClient();
 
   const { data: banks } = await supabase.from('banks').select('*');
 

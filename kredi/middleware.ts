@@ -45,7 +45,11 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  await supabase.auth.getSession()
+  try {
+    await supabase.auth.getSession()
+  } catch (e) {
+    console.error('Middleware Supabase Error:', e)
+  }
 
   return response
 }

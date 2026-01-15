@@ -13,7 +13,7 @@ export async function GET() {
       }
     });
   } catch (error) {
-    console.error('TCMB API hatası:', error);
+    console.error('TCMB API hatası (Detailed):', error);
     return NextResponse.json(
       { error: 'TCMB döviz kurları alınırken bir hata oluştu' }, 
       { status: 500 }
